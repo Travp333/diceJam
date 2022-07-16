@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//dungeon overworld script controls the character and the camera
 public class movement : MonoBehaviour
 {
+    
     [SerializeField]
     float lerpTime;
     float countdown;
     [SerializeField]
-    GameObject currentChunk;
+    public GameObject currentChunk;
     bool gate = true;
     [SerializeField]
     float completedDistance;
@@ -19,8 +20,7 @@ public class movement : MonoBehaviour
     Camera mainCam = default;
     [SerializeField]
     Camera baseCam = default;
-  
-
+    public Enemy enemy = null;
     
 
     public Camera specialCam = null;
@@ -52,6 +52,7 @@ public class movement : MonoBehaviour
                     countdown = 0;
                     camCountdown = 0;
                     CheckforSpecialCamera();
+                    CheckforEnemy();
                 }
             }
             if(Input.GetKeyDown("a")){
@@ -60,6 +61,7 @@ public class movement : MonoBehaviour
                     countdown = 0;
                     camCountdown = 0;
                     CheckforSpecialCamera();
+                    CheckforEnemy();
                 }
             }
             if(Input.GetKeyDown("s")){
@@ -67,7 +69,8 @@ public class movement : MonoBehaviour
                     currentChunk = currentChunk.GetComponent<dungeonPiece>().southPiece;  
                     countdown = 0;
                     camCountdown = 0;
-                    CheckforSpecialCamera(); 
+                    CheckforSpecialCamera();
+                    CheckforEnemy();
                 }
             }
             if(Input.GetKeyDown("d")){
@@ -76,6 +79,7 @@ public class movement : MonoBehaviour
                     countdown = 0;
                     camCountdown = 0;
                     CheckforSpecialCamera();
+                    CheckforEnemy();
                 }
             }
         }
@@ -120,4 +124,11 @@ public class movement : MonoBehaviour
         if(specialCam == null)
         Debug.Log("No Special Cam");
     }
+    void CheckforEnemy() {
+       enemy =  currentChunk.GetComponentInChildren(typeof(Enemy)) as Enemy;
+        if (enemy != null) {
+            Debug.Log("Enemy Found");
+        }
+    }
+    
 }

@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//spawns the dice and deals with dice rolling
 public class diceRoll : MonoBehaviour
 {
+    
     [SerializeField]
     float[] rollSpeedRange;
     Rigidbody body;
