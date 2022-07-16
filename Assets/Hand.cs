@@ -69,13 +69,13 @@ public class Hand : MonoBehaviour
 	}
 	void Tick()
 	{
-		UpdateTotals();
+		AddDiceToCount();
 
 	}
-	private void UpdateTotals() {
+	private void AddDiceToCount() {
 		foreach (diceRoll d in diceList) {
 			int f = d.currentFace;
-			if(!d.wasCounted)
+			if(d.wasCounted !=true && d.wasClicked)
 			switch (f) {
 
 				case 1:

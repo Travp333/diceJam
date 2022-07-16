@@ -12,12 +12,21 @@ public class diceRoll : MonoBehaviour
     [SerializeField]
     bool playerDice = true;
     public int currentFace = 0;
+    public bool stoppedMoving = false;
     public bool wasCounted = false;
+    public bool wasClicked = false;
     [SerializeField]
     float nudgeStrength;
     [SerializeField]
     float nudgeRadius;
-    void Start()
+
+	private void OnMouseDown()
+	{
+        if (stoppedMoving) {
+            wasClicked = true;
+        }
+	}
+	void Start()
     {
         body = GetComponent<Rigidbody>();
     }
@@ -43,7 +52,7 @@ public class diceRoll : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(wasCounted && body.isKinematic == false){
+        if(stoppedMoving && body.isKinematic == false){
             body.isKinematic = true;
         }
         //commented this out in exchange for a re roll mechanic
