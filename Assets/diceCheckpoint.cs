@@ -83,7 +83,7 @@ public class diceCheckpoint : MonoBehaviour
     }
     //called when the criterea of this checkpoint is met, so either the player dealt damage to the mps, or vice versa. 
     void dealDamage(bool isPlayer){
-
+        
         if(isPlayer){
             closeGate();
             if(hp>0 && (hp - stats.damage) > 0){
