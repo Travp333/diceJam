@@ -5,7 +5,7 @@ using UnityEngine;
 public class diceCheckpoint : MonoBehaviour
 {
     bool gate = true;
-    //Hand hand;
+    Hand hand;
     [SerializeField]
     bool evenCheck, oddCheck, oneCheck, twoCheck, threeCheck, fourCheck, fiveCheck, sixCheck;
     [SerializeField]
@@ -20,9 +20,9 @@ public class diceCheckpoint : MonoBehaviour
     void Start()
     {
         foreach (GameObject g in FindObjectsOfType<GameObject>()){
-            //if (g.GetComponent<Hand>() != null){
-           //     hand = g.GetComponent<Hand>();
-           // }
+            if (g.GetComponent<Hand>() != null){
+                hand = g.GetComponent<Hand>();
+            }
         }
     }
 
@@ -31,52 +31,52 @@ public class diceCheckpoint : MonoBehaviour
     {
         if(gate){
             if(evenCheck){
-               // if(hand.evenCount >= evenCount){
-                //    hand.Success();
+                if(hand.evenCount >= evenCount){
+                    hand.Success();
                     Defeated();
-              //  }
+                }
             }
             else if (oddCheck){
-               // if(hand.oddCount >= oddCount){
-               //     hand.Success();
+                if(hand.oddCount >= oddCount){
+                    hand.Success();
                     Defeated();
-               // }
+                }
             }
             if (oneCheck){
-               // if(hand.oneCount >= oneCount){
-               //     hand.Success();
+                if(hand.oneCount >= oneCount){
+                    hand.Success();
                     Defeated();
-              //  }
+                }
             }
             else if(twoCheck){
-               // if(hand.twoCount >= twoCount){
-              //      hand.Success();
+                if(hand.twoCount >= twoCount){
+                    hand.Success();
                     Defeated();
-               // }
+                }
             }
             else if(threeCheck){
-              //  if(hand.threeCount >= threeCount){
-              //      hand.Success();
+                if(hand.threeCount >= threeCount){
+                    hand.Success();
                     Defeated();
-               // }
+                }
             }
             else if(fourCheck){
-              //  if(hand.fourCount >= fourCount){
-               //     hand.Success();
+                if(hand.fourCount >= fourCount){
+                    hand.Success();
                     Defeated();
-              //  }
+                }
             }
             else if(fiveCheck){
-               // if(hand.fiveCount >= fiveCount){
-               //     hand.Success();
+                if(hand.fiveCount >= fiveCount){
+                    hand.Success();
                     Defeated();
-               // }
+                }
             }
             else if(sixCheck){
-                //if(hand.sixCount >= sixCount){
-               //     hand.Success();
+                if(hand.sixCount >= sixCount){
+                    hand.Success();
                     Defeated();
-               // }
+                }
             }
         }
     }

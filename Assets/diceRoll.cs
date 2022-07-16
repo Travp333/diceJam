@@ -12,6 +12,10 @@ public class diceRoll : MonoBehaviour
     bool playerDice = true;
     public int currentFace = 0;
     public bool wasCounted = false;
+    [SerializeField]
+    float nudgeStrength;
+    [SerializeField]
+    float nudgeRadius;
     void Start()
     {
         body = GetComponent<Rigidbody>();
@@ -38,16 +42,25 @@ public class diceRoll : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(gate && playerDice){
-            if(Input.GetKeyDown("space")){
-                body.AddForce(0, Random.Range(getRandomNum(), getRandomNum()), 0, ForceMode.Impulse);
-                body.AddTorque(getRandomNum()*50f, getRandomNum()*50f, getRandomNum()*50f);
-                closeGate();
-            }
+        if(wasCounted && body.isKinematic == false){
+            body.isKinematic = true;
         }
+        //commented this out in exchange for a re roll mechanic
+        //if(gate && playerDice){
+            //if(Input.GetKeyDown("space")){
+                //body.AddExplosionForce(nudgeStrength, this.transform.position, nudgeRadius, 0, ForceMode.Impulse);
+                //body.AddForce(0, Random.Range(getRandomNum(), getRandomNum()), 0, ForceMode.Impulse);
+                //body.AddTorque(getRandomNum()*1f, getRandomNum()*1f, getRandomNum()*1f);
+                //closeGate();
+            //}
+        //}
         if (body.IsSleeping())
         {
             currentFace = SetDiceValue();
+        }
+        else if(body.IsSleeping() && currentFace == 0){
+            body.AddExplosionForce(nudgeStrength, this.transform.position, nudgeRadius, 0, ForceMode.Impulse);
+            body.AddTorque(getRandomNum()*1f, getRandomNum()*1f, getRandomNum()*1f);
         }
         else {
             currentFace = 0;

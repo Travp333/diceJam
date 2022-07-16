@@ -5,16 +5,28 @@ using UnityEngine;
 public class Hand : MonoBehaviour
 {
 	[SerializeField]
+	float tick = 1f;
+	[SerializeField]
 	GameObject prefabDice;
 	[SerializeField]
 	int diceAmount = 10;
 	List<diceRoll> diceList;
-	int evenCount, oddCount, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount, totalCount;
+	public int evenCount, oddCount, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount, totalCount;
 	float tickCounter=0f;
 	[SerializeField]
 	float throwIntensity = 5f;
 	[SerializeField]
 	float spinIntensity = 5f;
+
+	//called when you match the opponents request, resets hand and dishes out rewards, ends battle if necessary
+	public void Success(){
+		ClearCounts();
+		foreach (diceRoll d in diceList){
+			Destroy(d.gameObject);
+		}
+		diceList.Clear();
+	}
+
 	
 	private void Start()
 	{
@@ -66,7 +78,7 @@ public class Hand : MonoBehaviour
 						break;
 				default :
 						d.wasCounted = false;
-						Debug.Log("dice read failed");
+						//Debug.Log("dice read failed");
 						break;
 			}
 		}
@@ -79,18 +91,26 @@ public class Hand : MonoBehaviour
 	private void Update()
 	{
 		tickCounter += Time.deltaTime;
-		if (tickCounter > 2f) {
-			tickCounter -= 2f;
+		if (tickCounter > tick) {
+			tickCounter -= tick;
 			Tick();
+		}
+		if(Input.GetKeyDown("r")){
+			ClearCounts();
+			foreach (diceRoll d in diceList){
+				Destroy(d.gameObject);
+			}
+			diceList.Clear();
+			SpawnDice(diceAmount);
+			
 		}
 	}
 
-	void SpawnDice(int quantity) {
+	public void SpawnDice(int quantity) {
 		for (int i = 0; i < quantity; i++)
 		{
 
-			GameObject dice = Instantiate(prefabDice, this.transform.position + (Vector3.right * i) + Vector3.right, Quaternion.identity);
-
+			GameObject dice = Instantiate(prefabDice, this.transform.position + (Vector3.up * (i * 1.5f)) - Vector3.up + (Vector3.right*Random.Range(-3f, 3f)),  Random.rotation);//Quaternion.identity);
 			Rigidbody r = dice.GetComponent<Rigidbody>();
 			r.AddForce(this.transform.up * throwIntensity*100);
 			r.AddTorque( Random.onUnitSphere * 1000 * spinIntensity);
