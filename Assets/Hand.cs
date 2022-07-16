@@ -5,6 +5,14 @@ using UnityEngine;
 public class Hand : MonoBehaviour
 {
 	[SerializeField]
+	public int damage = 15;
+	[SerializeField]
+	diceCheckpoint check;
+	[SerializeField]
+	fellaAnimController anim;
+	[SerializeField]
+	public bool isPlayer;
+	[SerializeField]
 	float tick = 1f;
 	[SerializeField]
 	GameObject prefabDice;
@@ -17,9 +25,12 @@ public class Hand : MonoBehaviour
 	float throwIntensity = 5f;
 	[SerializeField]
 	float spinIntensity = 5f;
+	bool enemySleepDice = false;
+	bool blocker;
 
 	//called when you match the opponents request, resets hand and dishes out rewards, ends battle if necessary
 	public void Success(){
+		Debug.Log(this.transform.parent.gameObject.name + " Won!");
 		ClearCounts();
 		foreach (diceRoll d in diceList){
 			Destroy(d.gameObject);
@@ -32,7 +43,7 @@ public class Hand : MonoBehaviour
 	{
 		diceList = new List<diceRoll>();
 		ClearCounts();
-		SpawnDice(diceAmount);
+		//SpawnDice(diceAmount);
 
 	}
 	void Tick()
@@ -82,31 +93,63 @@ public class Hand : MonoBehaviour
 						break;
 			}
 		}
-		Debug.Log("EvenCount =" +  evenCount + "  OddCount =" + oddCount);
-		Debug.Log(oneCount + " 1's, " + twoCount + " 2's, " + threeCount + " 3's, " + fourCount + " 4's, " + fiveCount + " 5's, " + sixCount + " 6's, ");
+		//Debug.Log("EvenCount =" +  evenCount + "  OddCount =" + oddCount);
+		//Debug.Log(oneCount + " 1's, " + twoCount + " 2's, " + threeCount + " 3's, " + fourCount + " 4's, " + fiveCount + " 5's, " + sixCount + " 6's, ");
 	}
 	private void ClearCounts() {
 		evenCount = oddCount = oneCount = twoCount = threeCount = fourCount = fiveCount = sixCount = totalCount = 0;
 	}
+
+	public void enemyReRoll(){
+		if(!blocker){
+			enemySleepDice = true;
+			foreach(diceRoll d in diceList){
+				if(!d.gameObject.GetComponent<Rigidbody>().IsSleeping()){
+					enemySleepDice = false;
+				}
+			}
+			if(enemySleepDice){
+				enemySleepDice = false;
+				Debug.Log("ENEMYREROLL");
+				anim.setthrowinDie();
+				blocker = true;
+			}
+		}
+	}
+
+	public void reRoll(){
+		check.openGate();
+		blocker = false;
+		ClearCounts();
+		foreach (diceRoll d in diceList){
+			Destroy(d.gameObject);
+		}
+		diceList.Clear();
+		SpawnDice(diceAmount);
+	}
+
+
 	private void Update()
 	{
 		tickCounter += Time.deltaTime;
 		if (tickCounter > tick) {
 			tickCounter -= tick;
 			Tick();
+			if(!isPlayer){
+				enemyReRoll();
+			}
 		}
 		if(Input.GetKeyDown("r")){
-			ClearCounts();
-			foreach (diceRoll d in diceList){
-				Destroy(d.gameObject);
+			if(isPlayer){
+				reRoll();
 			}
-			diceList.Clear();
-			SpawnDice(diceAmount);
-			
 		}
-	}
 
+	}
 	public void SpawnDice(int quantity) {
+		if(!isPlayer){
+			enemySleepDice = true;
+		}
 		for (int i = 0; i < quantity; i++)
 		{
 

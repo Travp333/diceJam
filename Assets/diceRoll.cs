@@ -59,6 +59,7 @@ public class diceRoll : MonoBehaviour
             currentFace = SetDiceValue();
         }
         else if(body.IsSleeping() && currentFace == 0){
+            Debug.Log("Dice Stuck!");
             body.AddExplosionForce(nudgeStrength, this.transform.position, nudgeRadius, 0, ForceMode.Impulse);
             body.AddTorque(getRandomNum()*1f, getRandomNum()*1f, getRandomNum()*1f);
         }

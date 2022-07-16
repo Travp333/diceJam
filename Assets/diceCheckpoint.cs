@@ -4,25 +4,40 @@ using UnityEngine;
 
 public class diceCheckpoint : MonoBehaviour
 {
+    public int hp = 100;
     bool gate = true;
     Hand hand;
+    Hand hand2;
     [SerializeField]
     bool evenCheck, oddCheck, oneCheck, twoCheck, threeCheck, fourCheck, fiveCheck, sixCheck;
     [SerializeField]
     int evenCount, oddCount, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount;
     // Start is called before the first frame update
-    void openGate(){
+    public void openGate(){
         gate = true;
     }
-    void Defeated(){
+    void closeGate(){
         gate = false;
     }
     void Start()
     {
         foreach (GameObject g in FindObjectsOfType<GameObject>()){
-            if (g.GetComponent<Hand>() != null){
+            if (g.GetComponent<Hand>() != null && g.GetComponent<Hand>().isPlayer){
                 hand = g.GetComponent<Hand>();
             }
+            else if (g.GetComponent<Hand>() != null && !g.GetComponent<Hand>().isPlayer){
+                hand2 = g.GetComponent<Hand>();
+            }
+        }
+    }
+
+    void dealDamage(){
+        closeGate();
+        if(hp>0){
+            hp -= hand.damage;
+        }
+        else{
+            hand.Success(); 
         }
     }
 
@@ -32,52 +47,81 @@ public class diceCheckpoint : MonoBehaviour
         if(gate){
             if(evenCheck){
                 if(hand.evenCount >= evenCount){
-                    hand.Success();
-                    Defeated();
+                    dealDamage();    
+                }
+                else if(hand2.evenCount >= evenCount){
+                    hand2.Success();
+                    closeGate();
                 }
             }
             else if (oddCheck){
                 if(hand.oddCount >= oddCount){
-                    hand.Success();
-                    Defeated();
+                    dealDamage(); 
                 }
+                else if(hand2.oddCount >= oddCount){
+                    hand2.Success();
+                    closeGate();
+                }
+
             }
             if (oneCheck){
                 if(hand.oneCount >= oneCount){
-                    hand.Success();
-                    Defeated();
+                    dealDamage(); 
+                }
+                else if(hand2.oneCount >= oneCount){
+                    hand2.Success();
+                    closeGate();
                 }
             }
             else if(twoCheck){
                 if(hand.twoCount >= twoCount){
-                    hand.Success();
-                    Defeated();
+                    dealDamage(); 
+                }
+                else if(hand2.twoCount >= twoCount){
+                    hand2.Success();
+                    closeGate();
                 }
             }
             else if(threeCheck){
                 if(hand.threeCount >= threeCount){
-                    hand.Success();
-                    Defeated();
+                    dealDamage(); 
+                }
+                else if(hand2.threeCount >= threeCount){
+                    hand2.Success();
+                    closeGate();
                 }
             }
             else if(fourCheck){
                 if(hand.fourCount >= fourCount){
-                    hand.Success();
-                    Defeated();
+                    dealDamage(); 
+                }
+                else if(hand2.fourCount >= fourCount){
+                    hand2.Success();
+                    closeGate();
                 }
             }
             else if(fiveCheck){
                 if(hand.fiveCount >= fiveCount){
-                    hand.Success();
-                    Defeated();
+                    dealDamage(); 
+                }
+                else if(hand2.evenCount >= evenCount){
+                    hand2.Success();
+                    closeGate();
                 }
             }
             else if(sixCheck){
                 if(hand.sixCount >= sixCount){
-                    hand.Success();
-                    Defeated();
+                    dealDamage(); 
+                }
+                else if(hand2.sixCount >= sixCount){
+                    hand2.Success();
+                    closeGate();
                 }
             }
+
+
+
+
         }
     }
 }
