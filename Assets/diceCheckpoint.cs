@@ -4,6 +4,7 @@ using UnityEngine;
 //acts as the enemy stats script as well as the script that assigns and checks the challenges
 public class diceCheckpoint : MonoBehaviour
 {
+    battleController battle;
     //amount of damage the enemy does to you
     public int damage;
     //refrence to the enemies animator
@@ -17,6 +18,7 @@ public class diceCheckpoint : MonoBehaviour
     playerStats stats;
     //enemies HP
     public int hp = 100;
+    int defaulthp;
     //amount of die the enemy has
     [SerializeField]
     public int diceCount = 3;
@@ -35,6 +37,10 @@ public class diceCheckpoint : MonoBehaviour
     [SerializeField]
     public int evenCount, oddCount, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount;
     //stuns the enemy, stopping them from rolling any die
+
+    public void resetHP(){
+        hp = 100;
+    }
     public void setStunned(){
         stunned = true;
         Invoke("resetStunned", stunnedTimer);
@@ -59,21 +65,20 @@ public class diceCheckpoint : MonoBehaviour
     }
     void Start()
     {
+        defaulthp = hp;
+        hand2 = transform.GetChild(2).GetComponent<Hand>();
+        anim = this.gameObject.GetComponent<fellaAnimController>();
+        
         //assigns all the necessary references
         foreach (GameObject g in FindObjectsOfType<GameObject>()){
             if (g.GetComponent<Hand>() != null && g.GetComponent<Hand>().isPlayer){
                 hand = g.GetComponent<Hand>();
             }
-            else if (g.GetComponent<Hand>() != null && !g.GetComponent<Hand>().isPlayer){
-                hand2 = g.GetComponent<Hand>();
+            if (g.GetComponent<battleController>() != null ){
+                battle = g.GetComponent<battleController>();
             }
             if(g.GetComponent<playerStats>() != null){
                 stats = g.GetComponent<playerStats>();
-
-                
-            }
-            if(g.GetComponent<fellaAnimController>()!= null){
-                anim = g.GetComponent<fellaAnimController>();
             }
             if (stats != null)
             {
@@ -86,6 +91,9 @@ public class diceCheckpoint : MonoBehaviour
         Debug.Log("You Dealt " + stats.damage + " damage!");
         hp -= stats.damage;
         setStunned();
+    }
+    public void endBattle(){
+        battle.endBattle(); 
     }
     //called when the criterea of this checkpoint is met, so either the player dealt damage to the mps, or vice versa. 
     void dealDamage(bool isPlayer){
@@ -101,6 +109,9 @@ public class diceCheckpoint : MonoBehaviour
                 // he got no hp, he dead
                 anim.setDead();
                 hand.Success(); 
+                hand2.clearDie();
+
+                
             }
         }
         else if(!isPlayer){
@@ -211,7 +222,8 @@ public class diceCheckpoint : MonoBehaviour
     }
     void RandomizeCheckpointValues(int maxdice) {
         int i = Random.Range(1, 8);
-        int m = Random.Range(2, maxdice+1);
+        // lowering this for the sake of testing 
+        int m = Random.Range(2, maxdice - 3);
         ResetCheckpointValues();
         switch (i) {
             case 1:

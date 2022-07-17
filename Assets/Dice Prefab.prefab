@@ -94,7 +94,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6996048705917113846}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 50
   m_Drag: 0
   m_AngularDrag: 0.1
   m_UseGravity: 1
@@ -134,6 +134,8 @@ MonoBehaviour:
   gate: 1
   playerDice: 1
   currentFace: 6
+  stoppedMoving: 0
   wasCounted: 0
+  wasClicked: 0
   nudgeStrength: 2
   nudgeRadius: 2

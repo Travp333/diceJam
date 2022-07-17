@@ -4,12 +4,15 @@ using UnityEngine;
 // spawns die and keeps track of what face they land on
 public class Hand : MonoBehaviour
 {
+	SceneController scene;
+	movement move;
+	battleController battle;
 	//reference to the player stats script
 	playerStats stats;
 	// reference to the checkpoint script
 	diceCheckpoint check;
 	// reference to the anim script
-	fellaAnimController anim;
+	public fellaAnimController anim;
 	// bool that tracks whether this hand is placed on the player or not, manually set
 	[SerializeField]
 	public bool isPlayer;
@@ -55,17 +58,30 @@ public class Hand : MonoBehaviour
 		}
 		//plugs in all necessary references
 		foreach (GameObject g in GameObject.FindObjectsOfType<GameObject>()){
-			if(g.GetComponent<diceCheckpoint>() != null){
-				check = g.GetComponent<diceCheckpoint>();
-			}
 			if(g.GetComponent<playerStats>()!= null){
 				stats = g.GetComponent<playerStats>();
 			}
+			if(g.GetComponent<battleController>()!= null){
+				battle = g.GetComponent<battleController>();
+			}
+			if(g.GetComponent<movement>()!= null){
+				move = g.GetComponent<movement>();
+			}
+			if(g.GetComponent<SceneController>()!= null){
+				scene = g.GetComponent<SceneController>();
+			}
+		}
+		if(!isPlayer){
+			check = transform.parent.GetComponent<diceCheckpoint>();
 		}
 		diceList = new List<diceRoll>();
 		ClearCounts();
 		//SpawnDice(diceAmount);
 
+	}
+
+	public void updateCheckReference(diceCheckpoint ch){
+		check = ch;
 	}
 	void Tick()
 	{
@@ -122,19 +138,21 @@ public class Hand : MonoBehaviour
 	}
 	// checks if enemy die are all asleep. if so, it plays the animation that then spawns new die by calling reRoll
 	public void enemyReRoll(){
-		if(!blocker && !check.stunned && !anim.getHappy()){
-			enemySleepDice = true;
-			foreach(diceRoll d in diceList){
-				if(!d.gameObject.GetComponent<Rigidbody>().IsSleeping()){
-					enemySleepDice = false;
+		if(scene.battleScene){
+			if(!blocker && !check.stunned && !anim.getHappy()){
+				enemySleepDice = true;
+				foreach(diceRoll d in diceList){
+					if(!d.gameObject.GetComponent<Rigidbody>().IsSleeping()){
+						enemySleepDice = false;
+					}
 				}
-			}
-			if(enemySleepDice){
-				enemySleepDice = false;
-				Debug.Log("ENEMYREROLL");
-				Invoke("setthrowinDie", .1f);
-				//anim.setthrowinDie();
-				blocker = true;
+				if(enemySleepDice){
+					enemySleepDice = false;
+					//Debug.Log("ENEMYREROLL");
+					Invoke("setthrowinDie", .1f);
+					//anim.setthrowinDie();
+					blocker = true;
+				}
 			}
 		}
 	}
@@ -149,28 +167,29 @@ public class Hand : MonoBehaviour
 	}
 	// deletes old die, updates the list, then spawns new ones by calling spawnDice
 	public void reRoll(){
-		if(isPlayer && !stats.stunned){
-			check.openGate();
-		}
-		else if(!isPlayer && !check.stunned && !anim.getHappy()){
-			check.openGate2();
-		}
-		blocker = false;
-		ClearCounts();
-		//only run for player so that this can be ran on animation for enemy
-		if(isPlayer){
-			foreach (diceRoll d in diceList){
-				Destroy(d.gameObject);
+		if(scene.battleScene){
+			if(isPlayer && !stats.stunned){
+				check.openGate();
 			}
-			diceList.Clear();
+			else if(!isPlayer && !check.stunned && !anim.getHappy()){
+				check.openGate2();
+			}
+			blocker = false;
+			ClearCounts();
+			//only run for player so that this can be ran on animation for enemy
+			if(isPlayer){
+				foreach (diceRoll d in diceList){
+					Destroy(d.gameObject);
+				}
+				diceList.Clear();
+			}
+			if(isPlayer&& !stats.stunned){
+				SpawnDice(stats.diceAmount);
+			}
+			else if (!isPlayer && !check.stunned && !anim.getHappy()){
+				SpawnDice(check.diceCount);
+			}
 		}
-		if(isPlayer&& !stats.stunned){
-			SpawnDice(stats.diceAmount);
-		}
-		else if (!isPlayer && !check.stunned && !anim.getHappy()){
-			SpawnDice(check.diceCount);
-		}
-		
 	}
 
 
@@ -181,8 +200,10 @@ public class Hand : MonoBehaviour
 		if (tickCounter > tick) {
 			tickCounter -= tick;
 			Tick();
-			if(!isPlayer && !check.stunned && !anim.getHappy()){
-				enemyReRoll();
+			if(scene.battleScene){
+				if(!isPlayer && !check.stunned && !anim.getHappy()){
+					enemyReRoll();
+				}
 			}
 		}
 		// re-rolls your current hand if you are able to roll

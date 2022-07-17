@@ -11,11 +11,12 @@ public class fellaAnimController : MonoBehaviour
     diceCheckpoint check;
     Hand hand;
     Animator anim;  
+    bool happy;
     // Start is called before the first frame update
     public void clearDie(){
         hand.clearDie();
     }
-    void Start()
+    void Awake()
     {
         check = GetComponent<diceCheckpoint>();
         anim = GetComponent<Animator>();
@@ -41,10 +42,11 @@ public class fellaAnimController : MonoBehaviour
         return anim.GetBool("happy");
     }
     public void setthrowinDie(){
-        if(!getHappy()){
+        if(!happy && anim != null){
             anim.SetBool("throwinDie", true);
             Invoke("resetthrowinDie", throwinDieOffset);
         }
+
     }
     void resetthrowinDie(){
         anim.SetBool("throwinDie", false);
@@ -57,6 +59,12 @@ public class fellaAnimController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(anim.GetBool("happy")){
+            happy = true;
+        }
+        else{
+            happy = false;
+        }
         if(justIdle){
             anim.SetBool("throwinDie", false);
             anim.SetBool("stunned", false);
