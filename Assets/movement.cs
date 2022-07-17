@@ -203,19 +203,19 @@ public class movement : MonoBehaviour
     }
     void CheckforSpecialCamera() {
         specialCam = currentChunk.GetComponentInChildren(typeof(Camera), true) as Camera;
-        if(specialCam == null)
-        Debug.Log("No Special Cam");
+        if(specialCam == null);
+        //Debug.Log("No Special Cam");
     }
     void CheckforEnemy() {
        enemy =  currentChunk.GetComponentInChildren(typeof(Enemy)) as Enemy;
         if (enemy != null) {
-            Debug.Log("Enemy Found");
+            //Debug.Log("Enemy Found");
         }
     }
     void CheckforPickupDie(){
         die =  currentChunk.GetComponentInChildren(typeof(diePickup)) as diePickup;
         if (die != null) {
-            Debug.Log("Die Found");
+            //Debug.Log("Die Found");
 
         }
     }

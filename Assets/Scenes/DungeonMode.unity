@@ -15604,7 +15604,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438375931}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 8e716986b647d294ea2a8c6261328045, type: 3}
@@ -40240,11 +40240,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spoke: 0
   isDoor: 1
-  doorCost: 15
+  doorCost: 20
   chill: 0
   specialEnemy: 0
   block: 0
-  message: You need 15 die to exit!
+  message: You need 20 die to exit!
   type: 0
 --- !u!1 &1137852497
 GameObject:
@@ -49452,8 +49452,8 @@ MonoBehaviour:
   hp: 100
   coins: 0
   damage: 50
-  diceAmount: 100
-  startingDiceAmount: 5
+  diceAmount: 7
+  startingDiceAmount: 7
   stunnedcooldown: 2
 --- !u!1 &1460031488
 GameObject:
@@ -57211,7 +57211,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spoke: 0
   isDoor: 1
-  doorCost: 30
+  doorCost: 40
   chill: 0
   specialEnemy: 0
   block: 0

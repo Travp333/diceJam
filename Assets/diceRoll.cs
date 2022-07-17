@@ -4,7 +4,7 @@ using UnityEngine;
 //spawns the dice and deals with dice rolling
 public class diceRoll : MonoBehaviour
 {
-    
+    Hand hand;
     [SerializeField]
     float[] rollSpeedRange;
     Rigidbody body;
@@ -20,17 +20,15 @@ public class diceRoll : MonoBehaviour
     [SerializeField]
     float nudgeRadius;
 
-	private void OnMouseDown()
-	{
-        
-        if (stoppedMoving) {
-            wasClicked = true;
-            Debug.Log("a stationary dice was clicked");
-
-        }
-	}
 	void Start()
     {
+        foreach(GameObject g in GameObject.FindObjectsOfType<GameObject>()){
+            if(g.GetComponent<Hand>()!= null){
+                if(g.GetComponent<Hand>().isPlayer){
+                    hand = GetComponent<Hand>();
+                }
+            }
+        }
         body = GetComponent<Rigidbody>();
     }
 

@@ -111,14 +111,14 @@ public class SceneController : MonoBehaviour
 			else if (e.isDoor){
 				setHasSpoke(true);
 				if(e.doorCost > playerMove.gameObject.GetComponent<playerStats>().diceAmount){
-					Debug.Log("Not enough Cash!");
+					//Debug.Log("Not enough Cash!");
 					ClearMessage();
 					playerMove.enemy = null;
 					mainText.text = null;
 					UnFreezePlayer();
 				}
 				else{
-					Debug.Log("Door opened!");
+					//Debug.Log("Door opened!");
 					// in case we want to make them pay dice to continue
 					//playerMove.gameObject.GetComponent<playerStats>().diceAmount -= e.doorCost;
 					e.openDoors();
@@ -132,7 +132,7 @@ public class SceneController : MonoBehaviour
 	}
 
 	public void ClearMessage() {
-		Debug.Log("Clearing text...");
+		//Debug.Log("Clearing text...");
 		messageToSay = "";
 		messageToSay2 = "";
 		mainText.text = "";

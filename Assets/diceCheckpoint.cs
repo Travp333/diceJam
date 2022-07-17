@@ -118,6 +118,7 @@ public class diceCheckpoint : MonoBehaviour
                 hand.Success(); 
                 hand2.clearDie();
                 diceCount = diceCountTemp;
+                stats.diceAmount += diceCount;
 
                 
             }
@@ -149,6 +150,14 @@ public class diceCheckpoint : MonoBehaviour
 
     void Update()
     {
+        if(stats.diceAmount <= 0){
+            battle.endBattle();
+            hand2.Success();
+            Debug.Log("YOU DIED");
+            move.backToStart();
+            stats.hp = 100;
+            stats.diceAmount = stats.startingDiceAmount;
+        }
         //checking to see if the checkpoints criterea have been met on the player's hand
         if(gate){
             //Debug.Log("Checking rolled die...");
@@ -240,7 +249,7 @@ public class diceCheckpoint : MonoBehaviour
     void RandomizeCheckpointValues(int maxdice) {
         int i = Random.Range(1, 8);
         // lowering this for the sake of testing 
-        int m = Random.Range(2, maxdice + 1);
+        int m = Random.Range(2, maxdice -2);
         ResetCheckpointValues();
         switch (i) {
             case 1:
@@ -276,7 +285,7 @@ public class diceCheckpoint : MonoBehaviour
                 oddCount = m;
                 break;
         }
-        Debug.Log("randomized values");
+        //Debug.Log("randomized values");
 
     }
     void ResetCheckpointValues() {
