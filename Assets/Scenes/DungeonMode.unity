@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00018266604, g: 0.00017229364, b: 0.00026093388, a: 1}
+  m_IndirectSpecularColor: {r: 0.0690921, g: 0.07102405, b: 0.075385176, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9848,6 +9848,7 @@ MonoBehaviour:
   messageToSay2: 
   playerMove: {fileID: 1459111300}
   battleScene: 0
+  audioSource: {fileID: 438375932}
 --- !u!64 &287863890
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -15604,12 +15605,12 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438375931}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 8e716986b647d294ea2a8c6261328045, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 3fe1c42eb05de294cb6d86cca08123f7, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.796
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -49452,8 +49453,8 @@ MonoBehaviour:
   hp: 100
   coins: 0
   damage: 50
-  diceAmount: 7
-  startingDiceAmount: 7
+  diceAmount: 160
+  startingDiceAmount: 160
   stunnedcooldown: 2
 --- !u!1 &1460031488
 GameObject:
@@ -53195,6 +53196,8 @@ MonoBehaviour:
   - {fileID: 8279996675875914122}
   - {fileID: 8279996674458779636}
   - {fileID: 8279996674861363595}
+  battleTheme: {fileID: 8300000, guid: 8e716986b647d294ea2a8c6261328045, type: 3}
+  overworldTheme: {fileID: 8300000, guid: 3fe1c42eb05de294cb6d86cca08123f7, type: 3}
 --- !u!1 &1584147676
 GameObject:
   m_ObjectHideFlags: 0
