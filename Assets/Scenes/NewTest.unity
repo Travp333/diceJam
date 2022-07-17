@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00018266604, g: 0.00017229364, b: 0.00026093388, a: 1}
+  m_IndirectSpecularColor: {r: 0.0690921, g: 0.07102405, b: 0.075385176, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4343,7 +4343,7 @@ MonoBehaviour:
   chill: 0
   specialEnemy: 1
   block: 0
-  message: you cant use these doors, bitch!
+  message: This is my door. And that door. I actually own both doors. wow.
   type: 1
 --- !u!114 &128137592
 MonoBehaviour:
@@ -16468,7 +16468,7 @@ MonoBehaviour:
   chill: 0
   specialEnemy: 1
   block: 0
-  message: bitch!!! BITCH!!!!
+  message: I'm a creep! I'm a turtle.
   type: 1
 --- !u!114 &452074858
 MonoBehaviour:
@@ -53550,7 +53550,7 @@ MonoBehaviour:
   chill: 0
   specialEnemy: 1
   block: 0
-  message: Welcome to Dice World buddy
+  message: Look at me! I am FREAKY!
   type: 1
 --- !u!114 &1574307760
 MonoBehaviour:
@@ -67729,7 +67729,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Forfeit (in case of bugs)
+  m_text: Reset Game (in case of bugs)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -76393,7 +76393,7 @@ MonoBehaviour:
   chill: 0
   specialEnemy: 0
   block: 0
-  message: Welcome to Dice World buddy
+  message: Welcome to Dice World...*gulp*
   type: 1
 --- !u!1 &3454440688137601850
 GameObject:
