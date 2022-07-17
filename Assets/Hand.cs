@@ -75,7 +75,7 @@ public class Hand : MonoBehaviour
 	private void AddDiceToCount() {
 		foreach (diceRoll d in diceList) {
 			int f = d.currentFace;
-			if(d.wasCounted !=true && d.wasClicked)
+			if(!d.wasCounted)
 			switch (f) {
 
 				case 1:

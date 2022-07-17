@@ -12,6 +12,9 @@ public class SceneController : MonoBehaviour
     public string messageToSay;
 	[SerializeField]
 	movement playerMove = default;
+	[SerializeField]
+	diceCheckpoint ch = default;
+	bool battleScene = true;
 
 	
 	
@@ -22,18 +25,24 @@ public class SceneController : MonoBehaviour
 			{
 				mainText.text = messageToSay;
 			}
-			Enemy e = playerMove.enemy;
-		if (e != null)
-		{
+		/*Enemy e = playerMove.enemy;
+	if (e != null)
+	{
 
-			messageToSay = e.message;
+		messageToSay = e.message;
+	}
+	else 
+	{
+		ClearMessage();
+	}
+		*/
+
+		if (battleScene) {
+			string cond1 = null;
+			string cond2;
+			ReadCheckPointValues(ch, out cond1, out cond2);
+			messageToSay = "You need " + cond2 + " " + cond1 + "'s";
 		}
-		else 
-		{
-			ClearMessage();
-		}
-			
-		
 		
 
 		if (Input.GetKeyDown("space")){
@@ -55,4 +64,49 @@ public class SceneController : MonoBehaviour
 	{
 		playerMove.enabled = true;
 	}
+	void ReadCheckPointValues(diceCheckpoint c, out string a, out string b) {
+		a =b = null;
+		if (c.evenCheck) 
+		{
+			a = "evens";
+			b = "" + c.evenCount;
+		}
+		if (c.oddCheck)
+		{
+			a = "odds";
+			b = "" + c.oddCount;
+		}
+		if (c.oneCheck) 
+		{
+			a = "ones";
+			b = ""+ c.oneCount;
+		}
+		if (c.twoCheck)
+		{
+			a = "twos";
+			b = "" + c.twoCount;
+		}
+		if (c.threeCheck)
+		{
+			a = "threes";
+			b = "" + c.threeCount;
+		}
+		if (c.fourCheck)
+		{
+			a = "fours";
+			b = "" + c.fourCount;
+		}
+		if (c.fiveCheck)
+		{
+			a = "fives";
+			b = "" + c.fiveCount;
+		}
+		if (c.sixCheck)
+		{
+			a = "sixes";
+			b = "" + c.sixCount;
+		}
+		
+	}
+
 }

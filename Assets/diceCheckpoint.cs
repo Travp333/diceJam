@@ -19,7 +19,7 @@ public class diceCheckpoint : MonoBehaviour
     public int hp = 100;
     //amount of die the enemy has
     [SerializeField]
-    public int diceCount;
+    public int diceCount = 3;
     //gate that blocks the checkpoint from double counting player dice 
     public bool gate = true;
     //gate that blocks the checkpoint from double counting enemy dice
@@ -30,10 +30,10 @@ public class diceCheckpoint : MonoBehaviour
     Hand hand2;
     // bools that determine which type of checkpoint this is
     [SerializeField]
-    bool evenCheck, oddCheck, oneCheck, twoCheck, threeCheck, fourCheck, fiveCheck, sixCheck;
+    public bool evenCheck, oddCheck, oneCheck, twoCheck, threeCheck, fourCheck, fiveCheck, sixCheck;
     // ints that determine how many dice you are looking for
     [SerializeField]
-    int evenCount, oddCount, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount;
+    public int evenCount, oddCount, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount;
     //stuns the enemy, stopping them from rolling any die
     public void setStunned(){
         stunned = true;
@@ -69,11 +69,17 @@ public class diceCheckpoint : MonoBehaviour
             }
             if(g.GetComponent<playerStats>() != null){
                 stats = g.GetComponent<playerStats>();
+
+                
             }
             if(g.GetComponent<fellaAnimController>()!= null){
                 anim = g.GetComponent<fellaAnimController>();
             }
-        }
+            if (stats != null)
+            {
+                RandomizeCheckpointValues(Mathf.Min(stats.diceAmount, diceCount));
+            }
+            }
     }
     //called by the damage taken animation so that the damage is deducted in sync with that. damage taken animation may play late as it cant let it interrupt the rolldie anim
     public void damageDeduct(){
@@ -108,7 +114,9 @@ public class diceCheckpoint : MonoBehaviour
             else{
                 hand2.Success();
             }
+            
         }
+        RandomizeCheckpointValues(Mathf.Min(stats.diceAmount, diceCount));
     }
 
     void Update()
@@ -200,5 +208,50 @@ public class diceCheckpoint : MonoBehaviour
                 }
             }
         }
+    }
+    void RandomizeCheckpointValues(int maxdice) {
+        int i = Random.Range(1, 8);
+        int m = Random.Range(2, maxdice+1);
+        ResetCheckpointValues();
+        switch (i) {
+            case 1:
+                oneCheck = true;
+                oneCount = m;
+                break;
+            case 2:
+                twoCheck = true;
+                twoCount = m;
+                break;
+            case 3:
+                threeCheck = true;
+                threeCount = m;
+                break;
+            case 4:
+                fourCheck = true;
+                fourCount = m;
+                break;
+            case 5:
+                fiveCheck = true;
+                fiveCount = m;
+                break;
+            case 6:
+                sixCheck = true;
+                sixCount = m;
+                break;
+            case 7:
+                evenCheck = true;
+                evenCount = m;
+                break;
+            case 8:
+                oddCheck = true;
+                oddCount = m;
+                break;
+        }
+        Debug.Log("randomized values");
+
+    }
+    void ResetCheckpointValues() {
+        evenCheck = oddCheck = oneCheck = twoCheck = threeCheck = fourCheck = fiveCheck = sixCheck =false;
+        evenCount = oddCount = oneCount = twoCount = threeCount = fourCount= fiveCount= sixCount = 0;
     }
 }
