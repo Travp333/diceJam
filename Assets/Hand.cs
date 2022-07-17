@@ -18,7 +18,7 @@ public class Hand : MonoBehaviour
 	public bool isPlayer;
 	//how often the script updates the count of die and their faces
 	[SerializeField]
-	float tick = 1f;
+	float tick = .1f;
 	// prefab spawned when die is thrown
 	[SerializeField]
 	GameObject prefabDice;
@@ -38,7 +38,7 @@ public class Hand : MonoBehaviour
 	bool enemySleepDice = false;
 	// used to help track sleeping die
 	bool blocker;
-	int frozenAmount = 0;
+	private int frozenAmount = 0;
 
 	//called when you match the given request
 	public void Success(){
@@ -87,8 +87,21 @@ public class Hand : MonoBehaviour
 	}
 	void Tick()
 	{
-		AddDiceToCount(frozenDiceList);
+		if (isPlayer)
+		{
+			frozenAmount = frozenDiceList.Count;
+			AddDiceToCount(frozenDiceList);
+		}
+
 		AddDiceToCount(diceList);
+
+		if (scene.battleScene)
+		{
+			if (!isPlayer && !check.stunned && !anim.getHappy())
+			{
+				enemyReRoll();
+			}
+		}
 
 	}
 	private void AddDiceToCount(List<diceRoll> dlist ) {
@@ -137,7 +150,7 @@ public class Hand : MonoBehaviour
 		//Debug.Log(oneCount + " 1's, " + twoCount + " 2's, " + threeCount + " 3's, " + fourCount + " 4's, " + fiveCount + " 5's, " + sixCount + " 6's, ");
 	}
 	private void ClearCounts() {
-		evenCount = oddCount = oneCount = twoCount = threeCount = fourCount = fiveCount = sixCount = totalCount = frozenAmount = 0;
+		evenCount = oddCount = oneCount = twoCount = threeCount = fourCount = fiveCount = sixCount = totalCount = 0;
 
 	}
 	// checks if enemy die are all asleep. if so, it plays the animation that then spawns new die by calling reRoll
@@ -187,10 +200,14 @@ public class Hand : MonoBehaviour
 				foreach (diceRoll d in diceList){
 					
 					if (d.wasClicked) {
-						frozenDiceList.Add(d);
-						Debug.Log("added a dice to frozen list");
+						
 						GameObject o = d.gameObject;
+						diceRoll a = d;
+						
 						Instantiate(o);
+						frozenDiceList.Add(a);
+
+						Debug.Log(o.GetComponent<diceRoll>().wasClicked);
 					}
 				
 						Destroy(d.gameObject);
@@ -205,7 +222,7 @@ public class Hand : MonoBehaviour
 				SpawnDice(stats.diceAmount-frozenAmount);
 			}
 			else if (!isPlayer && !check.stunned && !anim.getHappy()){
-				SpawnDice(check.diceCount-frozenAmount);
+				SpawnDice(check.diceCount);
 			}
 		}
 	}
@@ -218,15 +235,18 @@ public class Hand : MonoBehaviour
 		if (tickCounter > tick) {
 			tickCounter -= tick;
 			Tick();
-			if(scene.battleScene){
-				if(!isPlayer && !check.stunned && !anim.getHappy()){
-					enemyReRoll();
-				}
-			}
+			
 		}
 		// re-rolls your current hand if you are able to roll
 		if(Input.GetKeyDown("r")){
 			if(isPlayer && !stats.stunned){
+				reRoll();
+			}
+		}
+		if (Input.GetKeyDown("w"))
+		{
+			if (isPlayer && !stats.stunned)
+			{
 				reRoll();
 			}
 		}
@@ -244,6 +264,7 @@ public class Hand : MonoBehaviour
 					r.AddForce(this.transform.up * throwIntensity*100);
 					r.AddTorque( Random.onUnitSphere * 1000 * spinIntensity);
 					diceList.Add(dice.GetComponent<diceRoll>());
+					
 				}
 			}
 		}
@@ -255,7 +276,8 @@ public class Hand : MonoBehaviour
 					r.AddForce(this.transform.up * throwIntensity*100);
 					r.AddTorque( Random.onUnitSphere * 1000 * spinIntensity);
 					diceList.Add(dice.GetComponent<diceRoll>());
-				}
+				Debug.Log(quantity + " spawned");
+			}
 		}
 	}
 }
