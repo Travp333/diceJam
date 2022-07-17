@@ -5,6 +5,8 @@ using UnityEngine;
 public class fellaAnimController : MonoBehaviour
 {
     [SerializeField]
+    bool justIdle;
+    [SerializeField]
     float throwinDieOffset = .5f;
     diceCheckpoint check;
     Hand hand;
@@ -55,15 +57,24 @@ public class fellaAnimController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(check.stunned){
-            anim.SetBool("stunned", true);
+        if(justIdle){
+            anim.SetBool("throwinDie", false);
+            anim.SetBool("stunned", false);
             anim.SetBool("happy", false);
+            anim.SetBool("hurt", false);
         }
         else{
-            anim.SetBool("stunned", false);
+            if(check.stunned){
+                anim.SetBool("stunned", true);
+                anim.SetBool("happy", false);
+            }
+            else{
+                anim.SetBool("stunned", false);
+            }
+            if(getHappy()){
+                anim.SetBool("throwinDie", false);
+            }
         }
-        if(getHappy()){
-            anim.SetBool("throwinDie", false);
-        }
+
     }
 }

@@ -6,6 +6,12 @@ TagManager:
   tags:
   - Ground
   - Node
+  - turtBase
+  - turtAlt
+  - turtAlt2
+  - fellaBase
+  - fellaAlt
+  - fellaAlt2
   layers:
   - Default
   - TransparentFX
