@@ -25,6 +25,9 @@ public class SceneController : MonoBehaviour
 	public bool battleScene = false;
 	bool hasSpoke;
 	Enemy e;
+	[SerializeField]
+	public AudioSource audioSource = default;
+	
 
 	public void updateHasSpoke(){
 		if(e != null){
@@ -55,8 +58,11 @@ public class SceneController : MonoBehaviour
 	public void setCheckPoint(GameObject g){
 		ch = battle.whichMonsterBattling(g).GetComponent<diceCheckpoint>();
 	}
-	
-	
+	private void LateUpdate()
+	{
+		
+	}
+
 	private void Update()
 	{
 		dieCount.text = stats.diceAmount.ToString();
