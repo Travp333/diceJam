@@ -23,7 +23,7 @@ public class Hand : MonoBehaviour
 	[SerializeField]
 	GameObject prefabDice;
 	// list of all dice thrown by this hand
-	List<diceRoll> diceList;
+	List<diceRoll> diceList, frozenDiceList;
 	//variables tracking amounts of each type of die
 	public int evenCount, oddCount, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount, totalCount;
 	//idk???
@@ -38,6 +38,7 @@ public class Hand : MonoBehaviour
 	bool enemySleepDice = false;
 	// used to help track sleeping die
 	bool blocker;
+	int frozenAmount = 0;
 
 	//called when you match the given request
 	public void Success(){
@@ -75,6 +76,7 @@ public class Hand : MonoBehaviour
 			check = transform.parent.GetComponent<diceCheckpoint>();
 		}
 		diceList = new List<diceRoll>();
+		frozenDiceList = new List<diceRoll>();
 		ClearCounts();
 		//SpawnDice(diceAmount);
 
@@ -85,11 +87,12 @@ public class Hand : MonoBehaviour
 	}
 	void Tick()
 	{
-		AddDiceToCount();
+		AddDiceToCount(frozenDiceList);
+		AddDiceToCount(diceList);
 
 	}
-	private void AddDiceToCount() {
-		foreach (diceRoll d in diceList) {
+	private void AddDiceToCount(List<diceRoll> dlist ) {
+		foreach (diceRoll d in dlist) {
 			int f = d.currentFace;
 			if(!d.wasCounted)
 			switch (f) {
@@ -134,7 +137,8 @@ public class Hand : MonoBehaviour
 		//Debug.Log(oneCount + " 1's, " + twoCount + " 2's, " + threeCount + " 3's, " + fourCount + " 4's, " + fiveCount + " 5's, " + sixCount + " 6's, ");
 	}
 	private void ClearCounts() {
-		evenCount = oddCount = oneCount = twoCount = threeCount = fourCount = fiveCount = sixCount = totalCount = 0;
+		evenCount = oddCount = oneCount = twoCount = threeCount = fourCount = fiveCount = sixCount = totalCount = frozenAmount = 0;
+
 	}
 	// checks if enemy die are all asleep. if so, it plays the animation that then spawns new die by calling reRoll
 	public void enemyReRoll(){
@@ -159,6 +163,7 @@ public class Hand : MonoBehaviour
 	void setthrowinDie(){
 		anim.setthrowinDie();
 	}
+	//clears all dice, even frozen
 	public void clearDie(){
 		foreach (diceRoll d in diceList){
 			Destroy(d.gameObject);
@@ -178,16 +183,26 @@ public class Hand : MonoBehaviour
 			ClearCounts();
 			//only run for player so that this can be ran on animation for enemy
 			if(isPlayer){
+				
 				foreach (diceRoll d in diceList){
-					Destroy(d.gameObject);
+					
+					if (d.wasClicked) {
+						frozenDiceList.Add(d);
+					}
+					if (!d.wasClicked)
+					{
+						Destroy(d.gameObject);
+					}
+
+
 				}
-				diceList.Clear();
+				
 			}
 			if(isPlayer&& !stats.stunned){
-				SpawnDice(stats.diceAmount);
+				SpawnDice(stats.diceAmount-frozenAmount);
 			}
 			else if (!isPlayer && !check.stunned && !anim.getHappy()){
-				SpawnDice(check.diceCount);
+				SpawnDice(check.diceCount-frozenAmount);
 			}
 		}
 	}

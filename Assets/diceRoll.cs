@@ -22,8 +22,10 @@ public class diceRoll : MonoBehaviour
 
 	private void OnMouseDown()
 	{
+        Debug.Log("a dice was clicked");
         if (stoppedMoving) {
             wasClicked = true;
+            
         }
 	}
 	void Start()
