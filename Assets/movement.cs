@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 //dungeon overworld script controls the character and the camera
 public class movement : MonoBehaviour
-{   manAnimController man;
+{ 
+    playerStats stats;
+    manAnimController man;
     [SerializeField]
     Camera battleCam;
     [SerializeField]
@@ -23,6 +25,7 @@ public class movement : MonoBehaviour
     Camera mainCam = default;
     [SerializeField]
     Camera baseCam = default;
+    public diePickup die;
     public Enemy enemy = null;
     public Camera specialCam = null;
     public float camLerpTime;
@@ -36,6 +39,9 @@ public class movement : MonoBehaviour
         foreach (GameObject g in GameObject.FindObjectsOfType<GameObject>()){
             if(g.GetComponent<SceneController>() != null){
                 scene = g.GetComponent<SceneController>();
+            }
+            if(g.GetComponent<playerStats>() != null){
+                stats = g.GetComponent<playerStats>();
             }
         }
     }
@@ -74,6 +80,10 @@ public class movement : MonoBehaviour
         if(Vector3.Distance(this.transform.position, currentChunk.transform.GetComponentInChildren(typeof(empty)).transform.position) < completedDistance && !dialogueBlock){
             gate = true;
             man.setMoving(false);
+            if(die!= null){
+                stats.diceAmount += die.dieValue;
+                Destroy(die.gameObject);
+            }
         }
         else{
             gate = false;
@@ -94,6 +104,7 @@ public class movement : MonoBehaviour
                         camCountdown = 0;
                         CheckforSpecialCamera();
                         CheckforEnemy();
+                        CheckforPickupDie();
                         if(enemy != null){
                             enemy.spoke = false;
                         }
@@ -111,6 +122,7 @@ public class movement : MonoBehaviour
                         camCountdown = 0;
                         CheckforSpecialCamera();
                         CheckforEnemy();
+                        CheckforPickupDie();
                         if(enemy != null){
                             enemy.spoke = false;
                         }
@@ -127,6 +139,7 @@ public class movement : MonoBehaviour
                         camCountdown = 0;
                         CheckforSpecialCamera();
                         CheckforEnemy();
+                        CheckforPickupDie();
                         if(enemy != null){
                             enemy.spoke = false;
                         }
@@ -143,6 +156,7 @@ public class movement : MonoBehaviour
                         camCountdown = 0;
                         CheckforSpecialCamera();
                         CheckforEnemy();
+                        CheckforPickupDie();
                         if(enemy != null){
                             enemy.spoke = false;
                         }
@@ -196,6 +210,13 @@ public class movement : MonoBehaviour
        enemy =  currentChunk.GetComponentInChildren(typeof(Enemy)) as Enemy;
         if (enemy != null) {
             Debug.Log("Enemy Found");
+        }
+    }
+    void CheckforPickupDie(){
+        die =  currentChunk.GetComponentInChildren(typeof(diePickup)) as diePickup;
+        if (die != null) {
+            Debug.Log("Die Found");
+
         }
     }
     
