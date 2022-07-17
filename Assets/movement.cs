@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 //dungeon overworld script controls the character and the camera
 public class movement : MonoBehaviour
-{
+{   manAnimController man;
+    [SerializeField]
+    Camera battleCam;
+    [SerializeField]
+    GameObject start;
     SceneController scene;
     
     [SerializeField]
@@ -24,8 +28,10 @@ public class movement : MonoBehaviour
     public float camLerpTime;
     float camCountdown;
     bool dialogueBlock;
+    bool lerpBlock = false;
     void Start()
     {
+        man = this.gameObject.transform.GetChild(3).GetComponent<manAnimController>();
         this.transform.position = currentChunk.transform.GetComponentInChildren(typeof(empty)).transform.position;
         foreach (GameObject g in GameObject.FindObjectsOfType<GameObject>()){
             if(g.GetComponent<SceneController>() != null){
@@ -34,7 +40,29 @@ public class movement : MonoBehaviour
         }
     }
 
+    public void backToStart(){
+        transform.position = start.transform.GetComponentInChildren(typeof(empty)).transform.position;
+        currentChunk = start;
+        specialCam = null;
+        //mainCam.transform.position = baseCam.transform.position;
+        //LerpTransform(mainCam.transform, baseCam.transform, 100);
+    }
+    public void startBattle(){
+        lerpBlock = true;
+        LerpTransform(mainCam.transform, battleCam.transform, 1);
+        LerpFOV(mainCam, battleCam, 1);
+        //mainCam.transform.position = battleCam.transform.position;
+    }
+    public void endBattle(){
+
+        lerpBlock = false;
+        LerpTransform(mainCam.transform, baseCam.transform, 1);
+        LerpFOV(mainCam, baseCam, 1);
+        mainCam.transform.position = baseCam.transform.position;
+    }
+
     public void lockMovement(bool plug){
+        man.setMoving(false);
         dialogueBlock = plug;
     }
 
@@ -45,6 +73,7 @@ public class movement : MonoBehaviour
 
         if(Vector3.Distance(this.transform.position, currentChunk.transform.GetComponentInChildren(typeof(empty)).transform.position) < completedDistance && !dialogueBlock){
             gate = true;
+            man.setMoving(false);
         }
         else{
             gate = false;
@@ -52,16 +81,23 @@ public class movement : MonoBehaviour
         if(countdown < lerpTime){
             countdown += Time.deltaTime;
         }
-        transform.position = Vector3.Lerp(transform.position, currentChunk.transform.GetComponentInChildren(typeof(empty)).transform.position, countdown);
+        if(!lerpBlock){
+            transform.position = Vector3.Lerp(transform.position, currentChunk.transform.GetComponentInChildren(typeof(empty)).transform.position, countdown);
+        }
         if(gate){
             if(Input.GetKeyDown("w")){
                 if(currentChunk.GetComponent<dungeonPiece>().northPiece != null){
                     if(!currentChunk.GetComponent<dungeonPiece>().northPiece.GetComponent<dungeonPiece>().southDoor.activeSelf && !currentChunk.GetComponent<dungeonPiece>().northDoor.activeSelf){
+                        man.setMoving(true);
                         currentChunk = currentChunk.GetComponent<dungeonPiece>().northPiece; 
                         countdown = 0;
                         camCountdown = 0;
                         CheckforSpecialCamera();
                         CheckforEnemy();
+                        if(enemy != null){
+                            enemy.spoke = false;
+                        }
+                        
                     }
 
                 }
@@ -69,11 +105,15 @@ public class movement : MonoBehaviour
             if(Input.GetKeyDown("a")){
                 if(currentChunk.GetComponent<dungeonPiece>().westPiece != null){
                     if(!currentChunk.GetComponent<dungeonPiece>().westPiece.GetComponent<dungeonPiece>().eastDoor.gameObject.activeSelf && !currentChunk.GetComponent<dungeonPiece>().westDoor.activeSelf){
+                        man.setMoving(true);
                         currentChunk = currentChunk.GetComponent<dungeonPiece>().westPiece;   
                         countdown = 0;
                         camCountdown = 0;
                         CheckforSpecialCamera();
                         CheckforEnemy();
+                        if(enemy != null){
+                            enemy.spoke = false;
+                        }
                     }
 
                 }
@@ -81,11 +121,15 @@ public class movement : MonoBehaviour
             if(Input.GetKeyDown("s")){
                 if(currentChunk.GetComponent<dungeonPiece>().southPiece != null){
                     if(!currentChunk.GetComponent<dungeonPiece>().southPiece.GetComponent<dungeonPiece>().northDoor.gameObject.activeSelf && !currentChunk.GetComponent<dungeonPiece>().southDoor.activeSelf){
+                        man.setMoving(true);
                         currentChunk = currentChunk.GetComponent<dungeonPiece>().southPiece;  
                         countdown = 0;
                         camCountdown = 0;
                         CheckforSpecialCamera();
                         CheckforEnemy();
+                        if(enemy != null){
+                            enemy.spoke = false;
+                        }
                     }
 
                 }
@@ -93,18 +137,22 @@ public class movement : MonoBehaviour
             if(Input.GetKeyDown("d")){
                 if(currentChunk.GetComponent<dungeonPiece>().eastPiece != null){
                     if(!currentChunk.GetComponent<dungeonPiece>().eastPiece.GetComponent<dungeonPiece>().westDoor.gameObject.activeSelf && !currentChunk.GetComponent<dungeonPiece>().eastDoor.activeSelf){
+                        man.setMoving(true);
                         currentChunk = currentChunk.GetComponent<dungeonPiece>().eastPiece;  
                         countdown = 0;
                         camCountdown = 0;
                         CheckforSpecialCamera();
                         CheckforEnemy();
+                        if(enemy != null){
+                            enemy.spoke = false;
+                        }
                     }
 
                 }
             }
         }
         
-        if (specialCam != null)
+        if (specialCam != null && !lerpBlock)
         {
             if (camCountdown < camLerpTime)
             {
@@ -113,7 +161,7 @@ public class movement : MonoBehaviour
             LerpTransform(mainCam.transform, specialCam.transform, camCountdown);
             LerpFOV(mainCam, specialCam, countdown);
         }
-        if(specialCam == null)
+        if(specialCam == null && !lerpBlock)
         {
             if (camCountdown < camLerpTime)
             {

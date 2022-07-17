@@ -10,6 +10,7 @@ public class playerStats : MonoBehaviour
     public int coins;
     public int damage;
     public int diceAmount;
+    public int startingDiceAmount;
     public float stunnedcooldown;
 
     public void setStunned(){

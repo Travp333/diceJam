@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class battleController : MonoBehaviour
 {
+    Enemy en;
     Hand hand2;
     Hand hand;
     SceneController scene;
     [SerializeField]
     GameObject[] monsters;
+    movement move;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +20,9 @@ public class battleController : MonoBehaviour
             }
             if(g.GetComponent<Hand>() != null && g.GetComponent<Hand>().isPlayer){
                 hand = g.GetComponent<Hand>();
+            }
+            if(g.GetComponent<movement>() != null){
+                move = g.GetComponent<movement>();
             }
         }
         foreach(GameObject g in monsters){
@@ -48,6 +53,8 @@ public class battleController : MonoBehaviour
     }
 
     public void startBattle(GameObject enemy){
+        move.startBattle();
+        en = enemy.gameObject.GetComponent<Enemy>();
         Debug.Log("StartBattle!");
         //transform.parent.GetComponent<fellaAnimController>().resetAll();
         scene.setCheckPoint(enemy);
@@ -80,7 +87,18 @@ public class battleController : MonoBehaviour
         }
     }
     public void endBattle(){
-        
+        //battle is over, make sure no dice get left over
+        foreach(GameObject g in GameObject.FindObjectsOfType<GameObject>()){
+            if(g.GetComponent<diceRoll>()!= null){
+                Destroy(g.gameObject);
+            }
+        }
+
+        move.endBattle();
+        if(en.specialEnemy){
+            en.openDoors();
+            Destroy(en.gameObject);
+        }
         scene.ClearMessage();
         scene.battleScene = false;
         scene.UnFreezePlayer();

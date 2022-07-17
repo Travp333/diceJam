@@ -12,12 +12,14 @@ public class fellaAnimController : MonoBehaviour
     Hand hand;
     Animator anim;  
     bool happy;
+    public float Tick;
     // Start is called before the first frame update
     public void clearDie(){
         hand.clearDie();
     }
     void Awake()
     {
+        Tick = 0f;
         check = GetComponent<diceCheckpoint>();
         anim = GetComponent<Animator>();
         hand = transform.GetChild(2).GetComponent<Hand>();
@@ -42,6 +44,7 @@ public class fellaAnimController : MonoBehaviour
         return anim.GetBool("happy");
     }
     public void setthrowinDie(){
+        Tick = 0f;
         if(!happy && anim != null){
             anim.SetBool("throwinDie", true);
             Invoke("resetthrowinDie", throwinDieOffset);
@@ -82,6 +85,13 @@ public class fellaAnimController : MonoBehaviour
             if(getHappy()){
                 anim.SetBool("throwinDie", false);
             }
+        }
+        if(!justIdle && !anim.GetBool("stunned") && !anim.GetBool("happy") && !anim.GetBool("throwinDie") && !anim.GetBool("hurt") && !anim.GetBool("dead") && Tick < 50){
+            Tick += Time.deltaTime;
+        }
+        if(Tick > 50){
+            Tick = 0f;
+            setthrowinDie();
         }
 
     }

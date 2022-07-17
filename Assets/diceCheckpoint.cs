@@ -30,12 +30,14 @@ public class diceCheckpoint : MonoBehaviour
     Hand hand;
     // refrence to instance of hand script on enemy
     Hand hand2;
+    int diceCountTemp;
     // bools that determine which type of checkpoint this is
     [SerializeField]
     public bool evenCheck, oddCheck, oneCheck, twoCheck, threeCheck, fourCheck, fiveCheck, sixCheck;
     // ints that determine how many dice you are looking for
     [SerializeField]
     public int evenCount, oddCount, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount;
+    movement move;
     //stuns the enemy, stopping them from rolling any die
 
     public void resetHP(){
@@ -65,6 +67,7 @@ public class diceCheckpoint : MonoBehaviour
     }
     void Start()
     {
+        diceCountTemp = diceCount;
         defaulthp = hp;
         hand2 = transform.GetChild(2).GetComponent<Hand>();
         anim = this.gameObject.GetComponent<fellaAnimController>();
@@ -79,7 +82,9 @@ public class diceCheckpoint : MonoBehaviour
             }
             if(g.GetComponent<playerStats>() != null){
                 stats = g.GetComponent<playerStats>();
+                move = stats.gameObject.GetComponent<movement>();
             }
+            
             if (stats != null)
             {
                 RandomizeCheckpointValues(Mathf.Min(stats.diceAmount, diceCount));
@@ -100,30 +105,42 @@ public class diceCheckpoint : MonoBehaviour
         
         if(isPlayer){
             closeGate();
-            if(hp>0 && (hp - stats.damage) > 0){
+            if(hp>0 && (hp - stats.damage) > 0 && diceCount > 0){ 
                 //he still has hp, hurt him
                 anim.setHurt();
+                diceCount -= 1;
+                stats.diceAmount += 1;
             }
-            else if(hp <=0 || (hp - stats.damage) <=0){
+            else if(hp <=0 || (hp - stats.damage) <=0 || diceCount <= 0){
                 hp = 0;
                 // he got no hp, he dead
                 anim.setDead();
                 hand.Success(); 
                 hand2.clearDie();
+                diceCount = diceCountTemp;
 
                 
             }
         }
         else if(!isPlayer){
             closeGate2();
-            if (stats.hp > 0){
+            if ((stats.hp - damage) > 0 && stats.diceAmount > 0){
                 Debug.Log("Enemy Dealt " + damage + " damage!");
                 stats.hp -= damage;
                 stats.setStunned();
                 anim.setHappy();
+                stats.diceAmount -= 1;
+                diceCount += 1;
             }
-            else{
+            else if (stats.hp <=0 || (stats.hp - damage) <=0 || stats.diceAmount <= 0){
+                battle.endBattle();
                 hand2.Success();
+                Debug.Log("YOU DIED");
+                move.backToStart();
+                stats.hp = 100;
+                stats.diceAmount = stats.startingDiceAmount;
+
+
             }
             
         }
@@ -223,7 +240,7 @@ public class diceCheckpoint : MonoBehaviour
     void RandomizeCheckpointValues(int maxdice) {
         int i = Random.Range(1, 8);
         // lowering this for the sake of testing 
-        int m = Random.Range(2, maxdice - 3);
+        int m = Random.Range(2, maxdice + 1);
         ResetCheckpointValues();
         switch (i) {
             case 1:
