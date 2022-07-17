@@ -5,7 +5,11 @@ using TMPro;
 
 public class SceneController : MonoBehaviour
 {
+	[SerializeField]
+	playerStats stats;
 	battleController battle;
+	[SerializeField]
+    TextMeshProUGUI dieCount = default;
     [SerializeField]
     TextMeshProUGUI mainText = default;
 	[SerializeField]
@@ -55,6 +59,7 @@ public class SceneController : MonoBehaviour
 	
 	private void Update()
 	{
+		dieCount.text = stats.diceAmount.ToString();
 
 		if (messageToSay != null)
 		{
