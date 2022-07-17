@@ -4,15 +4,16 @@ using UnityEngine;
 //dungeon overworld script controls the character and the camera
 public class movement : MonoBehaviour
 {
+    SceneController scene;
     
     [SerializeField]
     float lerpTime;
     float countdown;
     [SerializeField]
     public GameObject currentChunk;
-    bool gate = true;
+    public bool gate = true;
     [SerializeField]
-    float completedDistance;
+    public float completedDistance;
     //camera stuff
     [SerializeField]
     Camera mainCam = default;
@@ -22,19 +23,27 @@ public class movement : MonoBehaviour
     public Camera specialCam = null;
     public float camLerpTime;
     float camCountdown;
+    bool dialogueBlock;
     void Start()
     {
         this.transform.position = currentChunk.transform.GetComponentInChildren(typeof(empty)).transform.position;
+        foreach (GameObject g in GameObject.FindObjectsOfType<GameObject>()){
+            if(g.GetComponent<SceneController>() != null){
+                scene = g.GetComponent<SceneController>();
+            }
+        }
     }
 
-
+    public void lockMovement(bool plug){
+        dialogueBlock = plug;
+    }
 
 
     // Update is called once per frame
     void Update()
     {
 
-        if(Vector3.Distance(this.transform.position, currentChunk.transform.GetComponentInChildren(typeof(empty)).transform.position) < completedDistance){
+        if(Vector3.Distance(this.transform.position, currentChunk.transform.GetComponentInChildren(typeof(empty)).transform.position) < completedDistance && !dialogueBlock){
             gate = true;
         }
         else{

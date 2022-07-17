@@ -5,6 +5,7 @@ using TMPro;
 
 public class SceneController : MonoBehaviour
 {
+	battleController battle;
     [SerializeField]
     TextMeshProUGUI mainText = default;
 	public float tickLength = .5f;
@@ -16,53 +17,67 @@ public class SceneController : MonoBehaviour
 	diceCheckpoint ch = default;
 	bool battleScene = true;
 
+
+	void Start()
+	{
+        foreach (GameObject g in GameObject.FindObjectsOfType<GameObject>()){
+            if(g.GetComponent<battleController>() != null){
+                battle = g.GetComponent<battleController>();
+            }
+        }
+	}
 	
 	
 	private void Update()
 	{
 		
-			if (messageToSay != null)
-			{
-				mainText.text = messageToSay;
-			}
-		/*Enemy e = playerMove.enemy;
-	if (e != null)
-	{
-
-		messageToSay = e.message;
-	}
-	else 
-	{
-		ClearMessage();
-	}
-		*/
+		if (messageToSay != null)
+		{
+			mainText.text = messageToSay;
+		}
 
 		if (battleScene) {
 			string cond1 = null;
 			string cond2;
 			ReadCheckPointValues(ch, out cond1, out cond2);
 			messageToSay = "You need " + cond2 + " " + cond1 + "'s";
+		Enemy e = playerMove.enemy;
+		if (e != null)
+		{
+			playerMove.lockMovement(true);
+			messageToSay = e.message;
 		}
 		
 
 		if (Input.GetKeyDown("space")){
-			UnFreezePlayer();
-			ClearMessage();
+			if(Vector3.Distance(playerMove.transform.position, playerMove.currentChunk.transform.GetComponentInChildren(typeof(empty)).transform.position) < playerMove.completedDistance/200f){
+				UnFreezePlayer();
+				ClearMessage();
+				battle.startBattle(playerMove.enemy.gameObject);
+				playerMove.enemy = null;
+				mainText.text = null;
+				
+			}
+		}
 		}
 	}
 
 	public void ClearMessage() {
-		messageToSay = "";
+		messageToSay = null;
 	}
 	public void ToggleControls() {
 		playerMove.enabled = !playerMove.enabled;
 	}
 	public void FreezePlayer() {
-		playerMove.enabled = false;
+		playerMove.lockMovement(true);
+		playerMove.gate = false;
+		//playerMove.enabled = false;
 	}
 	public void UnFreezePlayer()
 	{
-		playerMove.enabled = true;
+		playerMove.lockMovement(false);
+		playerMove.gate = true;
+		//playerMove.enabled = true;
 	}
 	void ReadCheckPointValues(diceCheckpoint c, out string a, out string b) {
 		a =b = null;

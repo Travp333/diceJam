@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+	public bool block;
 	public string message = " bleh! ";
 	public enum enemyType {boar, turtle};
 	[SerializeField]
