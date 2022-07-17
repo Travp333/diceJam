@@ -114,6 +114,10 @@ public class diceCheckpoint : MonoBehaviour
             else if(hp <=0 || (hp - stats.damage) <=0 || diceCount <= 0){
                 hp = 0;
                 // he got no hp, he dead
+
+                hand.setBlocker();
+
+
                 anim.setDead();
                 hand.Success(); 
                 hand2.clearDie();
@@ -148,9 +152,10 @@ public class diceCheckpoint : MonoBehaviour
         RandomizeCheckpointValues(Mathf.Min(stats.diceAmount, diceCount));
     }
 
+
     void Update()
     {
-        if(stats.diceAmount <= 0){
+        if(stats.diceAmount <= 0 || stats.hp <= 0){
             battle.endBattle();
             hand2.Success();
             Debug.Log("YOU DIED");
@@ -247,9 +252,14 @@ public class diceCheckpoint : MonoBehaviour
         }
     }
     void RandomizeCheckpointValues(int maxdice) {
+
+        if(maxdice > 6){
+            maxdice = 6;
+        }
+
         int i = Random.Range(1, 8);
         // lowering this for the sake of testing 
-        int m = Random.Range(2, maxdice -2);
+        int m = Random.Range(2, maxdice);
         ResetCheckpointValues();
         switch (i) {
             case 1:

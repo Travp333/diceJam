@@ -13,7 +13,9 @@ public class playerStats : MonoBehaviour
     public int diceAmount;
     public int startingDiceAmount;
     public float stunnedcooldown;
-
+    public void forfeit(){
+        hp = 0;
+    }
     public void setStunned(){
         stunned = true;
         Invoke("resetStunned", stunnedcooldown);

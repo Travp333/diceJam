@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using UnityEngine.SceneManagement;
 public class SceneController : MonoBehaviour
 {
+	[SerializeField]
+	GameObject button;
 	[SerializeField]
 	playerStats stats;
 	battleController battle;
@@ -26,6 +28,9 @@ public class SceneController : MonoBehaviour
 	bool hasSpoke;
 	Enemy e;
 	[SerializeField]
+	public void reset(){
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+	}
 	public AudioSource audioSource = default;
 	
 
@@ -73,11 +78,12 @@ public class SceneController : MonoBehaviour
 			subTitle.text = messageToSay2;
 		}
 		if (battleScene) {
+			button.SetActive(true);
 			string cond1 = null;
 			string cond2;
 			ReadCheckPointValues(ch, out cond1, out cond2);
 			if(ch.hp > 0){
-				messageToSay = "You need " + cond2 + " " + cond1 + "'s";
+				messageToSay = "Roll " + cond2 + " " + cond1 + "'s";
 			}
 			else{
 				messageToSay = "Won the Fight!";
@@ -105,6 +111,7 @@ public class SceneController : MonoBehaviour
 				battle.startBattle(playerMove.enemy.gameObject);
 				playerMove.enemy = null;
 				mainText.text = null;
+				button.SetActive(false);
 				
 			}
 			else if (e.chill && !e.isDoor){
@@ -113,6 +120,7 @@ public class SceneController : MonoBehaviour
 				playerMove.enemy = null;
 				mainText.text = null;
 				UnFreezePlayer();
+				button.SetActive(false);
 			}
 			else if (e.isDoor){
 				setHasSpoke(true);
@@ -122,6 +130,7 @@ public class SceneController : MonoBehaviour
 					playerMove.enemy = null;
 					mainText.text = null;
 					UnFreezePlayer();
+					button.SetActive(false);
 				}
 				else{
 					//Debug.Log("Door opened!");
@@ -132,6 +141,7 @@ public class SceneController : MonoBehaviour
 					playerMove.enemy = null;
 					mainText.text = null;
 					UnFreezePlayer();
+					button.SetActive(false);
 				}
 			}
 		}

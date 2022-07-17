@@ -57,6 +57,8 @@ public class battleController : MonoBehaviour
     }
 
     public void startBattle(GameObject enemy){
+
+        hand.resetBlocker();
         move.startBattle();
         en = enemy.gameObject.GetComponent<Enemy>();
         Debug.Log("StartBattle!");

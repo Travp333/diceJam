@@ -38,6 +38,7 @@ public class Hand : MonoBehaviour
 	bool enemySleepDice = false;
 	// used to help track sleeping die
 	bool blocker;
+	public bool blocker2;
 
 	//called when you match the given request
 	public void Success(){
@@ -197,6 +198,13 @@ public class Hand : MonoBehaviour
 		}
 	}
 
+	public void setBlocker(){
+		blocker2 = true;
+	}
+	public void resetBlocker(){
+		blocker2 = false;
+	}
+
 
 	private void Update()
 	{
@@ -212,11 +220,14 @@ public class Hand : MonoBehaviour
 			}
 		}
 		// re-rolls your current hand if you are able to roll
-		if(Input.GetKeyDown("r")){
-			if(isPlayer && !stats.stunned){
-				reRoll();
+		if(!blocker2){
+			if(Input.GetKeyDown("r")){
+				if(isPlayer && !stats.stunned){
+					reRoll();
+				}
 			}
 		}
+
 
 	}
 	//creates new die prefabs and updates the list i had to split it up to be different between player and enemy rolls to allow stun to work properly, may not totally be necessary though
