@@ -11,6 +11,9 @@ public class battleController : MonoBehaviour
     [SerializeField]
     GameObject[] monsters;
     movement move;
+    [SerializeField]
+    AudioClip battleTheme, overworldTheme;
+    AudioSource aS = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +31,7 @@ public class battleController : MonoBehaviour
         foreach(GameObject g in monsters){
             g.SetActive(false);
         }
+        aS = scene.audioSource;
     }
 
     public GameObject whichMonsterBattling(GameObject enemy){
@@ -59,6 +63,11 @@ public class battleController : MonoBehaviour
         //transform.parent.GetComponent<fellaAnimController>().resetAll();
         scene.setCheckPoint(enemy);
         scene.battleScene = true;
+        aS.clip = battleTheme;
+        aS.gameObject.SetActive(false);
+        aS.gameObject.SetActive(true);
+
+
         if (enemy.gameObject.tag == "turtBase"){
             monsters[3].SetActive(true);
         }
@@ -105,6 +114,9 @@ public class battleController : MonoBehaviour
         foreach(GameObject g in monsters){
             g.SetActive(false);
         }
+        aS.clip = overworldTheme;
+        aS.gameObject.SetActive(false);
+        aS.gameObject.SetActive(true);
     }
 
 
