@@ -22,10 +22,11 @@ public class diceRoll : MonoBehaviour
 
 	private void OnMouseDown()
 	{
-        Debug.Log("a dice was clicked");
+        
         if (stoppedMoving) {
             wasClicked = true;
-            
+            Debug.Log("a stationary dice was clicked");
+
         }
 	}
 	void Start()
@@ -69,6 +70,7 @@ public class diceRoll : MonoBehaviour
         if (body.IsSleeping())
         {
             currentFace = SetDiceValue();
+            stoppedMoving = true;
         }
         else if(body.IsSleeping() && currentFace == 0){
             Debug.Log("Dice Stuck!");

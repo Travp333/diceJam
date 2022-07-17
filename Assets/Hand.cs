@@ -188,14 +188,17 @@ public class Hand : MonoBehaviour
 					
 					if (d.wasClicked) {
 						frozenDiceList.Add(d);
+						Debug.Log("added a dice to frozen list");
+						GameObject o = d.gameObject;
+						Instantiate(o);
 					}
-					if (!d.wasClicked)
-					{
+				
 						Destroy(d.gameObject);
-					}
+					
 
 
 				}
+				diceList.Clear();
 				
 			}
 			if(isPlayer&& !stats.stunned){
