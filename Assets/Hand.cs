@@ -23,7 +23,7 @@ public class Hand : MonoBehaviour
 	[SerializeField]
 	GameObject prefabDice;
 	// list of all dice thrown by this hand
-	List<diceRoll> diceList, frozenDiceList;
+	List<diceRoll> diceList;
 	//variables tracking amounts of each type of die
 	public int evenCount, oddCount, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount, totalCount;
 	//idk???
@@ -38,7 +38,6 @@ public class Hand : MonoBehaviour
 	bool enemySleepDice = false;
 	// used to help track sleeping die
 	bool blocker;
-	private int frozenAmount = 0;
 
 	//called when you match the given request
 	public void Success(){
@@ -49,6 +48,8 @@ public class Hand : MonoBehaviour
 		}
 		diceList.Clear();
 	}
+
+	
 
 	
 	private void Start()
@@ -76,7 +77,6 @@ public class Hand : MonoBehaviour
 			check = transform.parent.GetComponent<diceCheckpoint>();
 		}
 		diceList = new List<diceRoll>();
-		frozenDiceList = new List<diceRoll>();
 		ClearCounts();
 		//SpawnDice(diceAmount);
 
@@ -87,25 +87,11 @@ public class Hand : MonoBehaviour
 	}
 	void Tick()
 	{
-		if (isPlayer)
-		{
-			frozenAmount = frozenDiceList.Count;
-			AddDiceToCount(frozenDiceList);
-		}
-
-		AddDiceToCount(diceList);
-
-		if (scene.battleScene)
-		{
-			if (!isPlayer && !check.stunned && !anim.getHappy())
-			{
-				enemyReRoll();
-			}
-		}
+		AddDiceToCount();
 
 	}
-	private void AddDiceToCount(List<diceRoll> dlist ) {
-		foreach (diceRoll d in dlist) {
+	private void AddDiceToCount() {
+		foreach (diceRoll d in diceList) {
 			int f = d.currentFace;
 			if(!d.wasCounted)
 			switch (f) {
@@ -176,7 +162,7 @@ public class Hand : MonoBehaviour
 	void setthrowinDie(){
 		anim.setthrowinDie();
 	}
-	//clears all dice, even frozen
+	//clears all dice
 	public void clearDie(){
 		foreach (diceRoll d in diceList){
 			Destroy(d.gameObject);
@@ -196,30 +182,14 @@ public class Hand : MonoBehaviour
 			ClearCounts();
 			//only run for player so that this can be ran on animation for enemy
 			if(isPlayer){
-				
 				foreach (diceRoll d in diceList){
-					
-					if (d.wasClicked) {
-						
-						GameObject o = d.gameObject;
-						diceRoll a = d;
-						
-						Instantiate(o);
-						frozenDiceList.Add(a);
-
-						Debug.Log(o.GetComponent<diceRoll>().wasClicked);
-					}
-				
-						Destroy(d.gameObject);
-					
-
-
+					Destroy(d.gameObject);
 				}
 				diceList.Clear();
 				
 			}
 			if(isPlayer&& !stats.stunned){
-				SpawnDice(stats.diceAmount-frozenAmount);
+				SpawnDice(stats.diceAmount);
 			}
 			else if (!isPlayer && !check.stunned && !anim.getHappy()){
 				SpawnDice(check.diceCount);
@@ -235,18 +205,15 @@ public class Hand : MonoBehaviour
 		if (tickCounter > tick) {
 			tickCounter -= tick;
 			Tick();
-			
+			if(scene.battleScene){
+				if(!isPlayer && !check.stunned && !anim.getHappy()){
+					enemyReRoll();
+				}
+			}
 		}
 		// re-rolls your current hand if you are able to roll
 		if(Input.GetKeyDown("r")){
 			if(isPlayer && !stats.stunned){
-				reRoll();
-			}
-		}
-		if (Input.GetKeyDown("w"))
-		{
-			if (isPlayer && !stats.stunned)
-			{
 				reRoll();
 			}
 		}
@@ -276,7 +243,7 @@ public class Hand : MonoBehaviour
 					r.AddForce(this.transform.up * throwIntensity*100);
 					r.AddTorque( Random.onUnitSphere * 1000 * spinIntensity);
 					diceList.Add(dice.GetComponent<diceRoll>());
-				Debug.Log(quantity + " spawned");
+				//Debug.Log(quantity + " spawned");
 			}
 		}
 	}
