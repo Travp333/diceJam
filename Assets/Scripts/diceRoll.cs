@@ -10,7 +10,7 @@ public class diceRoll : MonoBehaviour
     Rigidbody body;
     public bool gate = true;
     [SerializeField]
-    bool playerDice = true;
+    //bool playerDice = true;
     public int currentFace = 0;
     public bool stoppedMoving = false;
     public bool wasCounted = false;

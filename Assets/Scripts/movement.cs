@@ -203,7 +203,7 @@ public class movement : MonoBehaviour
     }
     void CheckforSpecialCamera() {
         specialCam = currentChunk.GetComponentInChildren(typeof(Camera), true) as Camera;
-        if(specialCam == null);
+        //if(specialCam == null);
         //Debug.Log("No Special Cam");
     }
     void CheckforEnemy() {

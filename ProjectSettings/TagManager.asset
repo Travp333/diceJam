@@ -12,6 +12,7 @@ TagManager:
   - fellaBase
   - fellaAlt
   - fellaAlt2
+  - dungeon
   layers:
   - Default
   - TransparentFX

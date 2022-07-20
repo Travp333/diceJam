@@ -17,7 +17,7 @@ public class SceneController : MonoBehaviour
 	[SerializeField]
 	TextMeshProUGUI subTitle = default;
 	public float tickLength = .5f;
-	float tickCount = 0;
+	//float tickCount = 0;
     public string messageToSay;
 	public string messageToSay2;
 	
